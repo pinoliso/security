@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Recetas</title>
+    <!-- Vincular Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2 class="mt-5 text-center">Buscar Recetas</h2>
+        
+        <!-- Formulario de Búsqueda -->
+        <form id="searchForm" class="mt-4" action="/recipes" method="get">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="recipeName">Nombre de la Receta</label>
+                    <input type="text" class="form-control" id="recipeName" name="recipeName" placeholder="Ej. Ensalada">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="cuisineType">Tipo de Cocina</label>
+                    <input type="text" class="form-control" id="cuisineType" name="cuisineType" placeholder="Ej. Italiana">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="ingredients">Ingredientes</label>
+                    <input type="text" class="form-control" id="ingredients" name="ingredients" placeholder="Ej. Tomate, Lechuga">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="country">País de Origen</label>
+                    <input type="text" class="form-control" id="country" name="country" placeholder="Ej. México">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="difficulty">Dificultad</label>
+                    <select id="difficulty" name="difficulty" class="form-control">
+                        <option value="">Seleccione...</option>
+                        <option value="fácil">Fácil</option>
+                        <option value="medio">Medio</option>
+                        <option value="difícil">Difícil</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4 align-self-end">
+                    <button type="submit" class="btn btn-primary btn-block">Buscar</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Listado de Recetas Estáticas -->
+        <h3 class="mt-5">Recetas Encontradas</h3>
+        <div class="row mt-4" id="recipe-container">
+            <div th:each="recipe : ${recipes}" class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <img th:src="${recipe.imageUrl}" class="card-img-top" alt="Receta">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${recipe.name}"></h5>
+                        <p class="card-text" th:text="${recipe.ingredients}"></p>
+                        <p class="card-text"><strong>Tipo de Cocina:</strong> <span th:text="${recipe.cuisineType}"></span></p>
+                        <p class="card-text"><strong>País de Origen:</strong> <span th:text="${recipe.country}"></span></p>
+                        <p class="card-text"><strong>Dificultad:</strong> <span th:text="${recipe.difficulty}"></span></p>
+                        <a th:href="${recipe.detailUrl}" class="btn btn-primary">Ver Detalle</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vincular Bootstrap JS y dependencias -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
