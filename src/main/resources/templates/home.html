@@ -6,46 +6,87 @@
     <title>Página de Inicio</title>
     <!-- Vincular Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" th:href="@{/style.css}" />
+
 </head>
+
 <body>
 
-    <!-- Banner -->
-    <div class="jumbotron jumbotron-fluid text-center">
-        <div class="container">
-            <h1 class="display-4">Bienvenido a la Aplicación de Recetas</h1>
-            <p class="lead">Encuentra las mejores recetas y compártelas con tus amigos.</p>
-            <div sec:authorize="!isAuthenticated()">
-                <a href="/login" class="btn btn-primary">Iniciar Sesión</a>
+<header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container position-relative d-flex align-items-center justify-content-between">
+
+        <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <h1 class="sitename">EL BUEN COMER</h1>
+        <span>.</span>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+        <ul>
+            <li><a href="#hero" class="active">Inicio<br></a></li>
+            <li><a href="#about">Sobre nosotros</a></li>
+            <li><a href="/recipes">Recetas</a></li>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <a class="btn-getstarted" href="/login">Iniciar Sesión</a>
+
+    </div>
+</header> 
+    
+<section id="hero" class="hero section light-background">
+
+    <div class="container">
+        <div class="row gy-4 justify-content-center justify-content-lg-between">
+        <div class="col-lg-5 order-2 order-lg-1 d-flex flex-column justify-content-center">
+            <h1>Inspírate y Crea<br>Recetas Únicas</h1>
+            <p>Inspírate con nuestras recetas para cada ocasión y gusto.</p>
+            <div class="d-flex" data-aos-delay="200">
+            <a href="/recipes" class="btn-get-started">Buscar Recetas</a>
             </div>
-            <div sec:authorize="isAuthenticated()">
-                <h1 th:inline="text">Hola <span th:remove="tag" sec:authentication="name"></span>!</h1>
-            </div>
-            <div>&nbsp;</div>
-            <a href="/recipes" class="btn btn-primary">Buscar Recetas</a>
+        </div>
+        <div class="col-lg-5 order-1 order-lg-2 hero-img">
+            <img src="https://i.blogs.es/3fad30/recetas-india-directo-al-paladar-pakus/450_1000.jpg" class="img-fluid animated" alt="">
+        </div>
         </div>
     </div>
 
-    <!-- Listado de Recetas -->
+</section>
+
+<section id="menu" class="menu section">
+
+    <div class="container section-title" data-aos="fade-up">
+        <h2>Recetas Más Buscadas</h2>
+        <p><span>Descubre Nuestras</span> <span class="description-title">Deliciosas Recetas</span></p>
+    </div><!-- End Section Title -->
+
     <div class="container">
-        <h2 class="mb-4">Listado de Recetas más Recientes y Populares</h2>
-        <div class="row">
-            <!-- Bucle para las recetas -->
-            <div th:each="recipe : ${recipes}" class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <img th:src="${recipe.imageUrl}" class="card-img-top" alt="Receta">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${recipe.name}"></h5>
-                        <p class="card-text" th:text="${recipe.cuisineType}"></p>
-                        <a th:href="${recipe.detailUrl}" class="btn btn-primary">Ver Detalle</a>
-                    </div>
+        <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
+
+            <div class="tab-pane fade active show" id="menu-starters">
+
+                <div class="row gy-5">
+                    <!-- Bucle para las recetas -->
+                    <div th:each="recipe : ${recipes}" class="col-lg-4 menu-item">
+                        <a th:href="${recipe.detailUrl}" class="glightbox">
+                            <img th:src="${recipe.imageUrl}" class="menu-img img-fluid" alt="Receta">
+                        </a>
+                        <h4 th:text="${recipe.name}"></h4>
+                        <p class="ingredients" th:text="${recipe.ingredients}"></p>
+                        <p class="price" th:text="${recipe.cuisineType}"></p>
+                    </div><!-- Menu Item -->
+
                 </div>
             </div>
         </div>
     </div>
+</section>
+
 
     <!-- Vincular Bootstrap JS y dependencias -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

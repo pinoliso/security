@@ -4,13 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Recetas</title>
-    <!-- Vincular Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/recipes.css}" />
 </head>
 <body>
 
+    <header id="header" class="header d-flex align-items-center sticky-top">
+        <div class="container position-relative d-flex align-items-center justify-content-between">
+            <a href="/home" class="logo d-flex align-items-center me-auto me-xl-0">
+                <h1 class="sitename">EL BUEN COMER</h1>
+                <span>.</span>
+            </a>
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="/home" class="active">Inicio</a></li>
+                    <li><a href="#about">Sobre nosotros</a></li>
+                    <li><a href="/recipes">Recetas</a></li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+            <a id="auth-link" class="btn-getstarted" href="/login">Iniciar Sesión</a>
+        </div>
+    </header> 
+
     <div class="container">
-        <h2 class="mt-5 text-center">Buscar Recetas</h2>
+        <div class="container section-title" data-aos="fade-up">
+            <h2>Buscar Recetas</h2>
+            <p><span class="description-title">Filtra a tu gusto</span></p>
+        </div>
         
         <!-- Formulario de Búsqueda -->
         <form id="searchForm" class="mt-4" action="/recipes" method="get">
@@ -47,27 +68,57 @@
                 </div>
             </div>
         </form>
+    </div>
 
-        <!-- Listado de Recetas Estáticas -->
-        <h3 class="mt-5">Recetas Encontradas</h3>
-        <div class="row mt-4" id="recipe-container">
-            <div th:each="recipe : ${recipes}" class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <img th:src="${recipe.imageUrl}" class="card-img-top" alt="Receta">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${recipe.name}"></h5>
-                        <p class="card-text" th:text="${recipe.ingredients}"></p>
-                        <p class="card-text"><strong>Tipo de Cocina:</strong> <span th:text="${recipe.cuisineType}"></span></p>
-                        <p class="card-text"><strong>País de Origen:</strong> <span th:text="${recipe.country}"></span></p>
-                        <p class="card-text"><strong>Dificultad:</strong> <span th:text="${recipe.difficulty}"></span></p>
-                        <a th:href="${recipe.detailUrl}" class="btn btn-primary">Ver Detalle</a>
+    <section id="menu" class="menu section">
+        <div class="container section-title" data-aos="fade-up">
+            <h2>Todas las Recetas</h2>
+            <p><span class="description-title">Deliciosas Recetas</span></p>
+        </div>
+
+        <div class="container">
+            <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
+                <div class="tab-pane fade active show" id="menu-starters">
+                    <div class="row gy-5">
+                        <!-- Bucle para las recetas -->
+                        <div th:each="recipe : ${recipes}" class="col-lg-4 menu-item">
+                            <a th:href="@{/recipe}" class="glightbox">
+                                <img th:src="${recipe.imageUrl}" class="menu-img img-fluid" alt="Receta">
+                            </a>
+                            <h4 th:text="${recipe.name}"></h4>
+                            <p class="ingredients" th:text="${recipe.ingredients}"></p>
+                            <p class="price" th:text="${recipe.cuisineType}"></p>
+                            <a th:href="@{/recipe}" class="btn btn-secondary mt-2">Ver Receta</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Vincular Bootstrap JS y dependencias -->
+    <script>
+        // Detecta el estado de autenticación
+        document.addEventListener('DOMContentLoaded', function() {
+            const authLink = document.getElementById('auth-link');
+            const token = localStorage.getItem('jwtToken');
+
+            if (token) {
+                // Si el usuario está autenticado, muestra "Cerrar Sesión"
+                authLink.textContent = 'Cerrar Sesión';
+                authLink.href = '#';
+                authLink.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    localStorage.removeItem('jwtToken'); // Elimina el token
+                    window.location.href = '/login'; // Redirige a la página de inicio de sesión
+                });
+            } else {
+                // Si no está autenticado, muestra "Iniciar Sesión"
+                authLink.textContent = 'Iniciar Sesión';
+                authLink.href = '/login';
+            }
+        });
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
