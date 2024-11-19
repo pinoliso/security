@@ -21,9 +21,11 @@ import com.duoc.recetas.CustomAuthenticationProvider;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-
-    @Autowired
-    private CustomAuthenticationProvider customAuthenticationProvider;
+    
+    private final CustomAuthenticationProvider customAuthenticationProvider;
+    public WebSecurityConfig(CustomAuthenticationProvider customAuthenticationProvider) {
+        this.customAuthenticationProvider = customAuthenticationProvider;
+    }
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

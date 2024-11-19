@@ -24,7 +24,7 @@ public class ExternalAuthService {
 
     public String login(String username, String password) {
         RestTemplate restTemplate = new RestTemplate();
-        String loginUrl = "http://20.83.144.250:8081/login";
+        String loginUrl = "http://localhost:8081/login";
 
         // Crear cuerpo y cabeceras de la petición
         HttpHeaders headers = new HttpHeaders();

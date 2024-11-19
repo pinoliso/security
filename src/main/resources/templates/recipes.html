@@ -23,99 +23,144 @@
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
-            <a id="auth-link" class="btn-getstarted" href="/login">Iniciar Sesión</a>
+            <a sec:authorize="isAnonymous()" id="auth-link" class="btn-getstarted" href="/login">Iniciar Sesión</a>
         </div>
     </header> 
 
     <div class="container">
-        <div class="container section-title" data-aos="fade-up">
-            <h2>Buscar Recetas</h2>
-            <p><span class="description-title">Filtra a tu gusto</span></p>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Todas las Recetas</h2>
+            <button sec:authorize="isAuthenticated()" class="btn btn-primary" data-toggle="modal" data-target="#createRecipeModal">Crear Receta</button>
         </div>
         
-        <!-- Formulario de Búsqueda -->
-        <form id="searchForm" class="mt-4" action="/recipes" method="get">
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="recipeName">Nombre de la Receta</label>
-                    <input type="text" class="form-control" id="recipeName" name="recipeName" placeholder="Ej. Ensalada">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="cuisineType">Tipo de Cocina</label>
-                    <input type="text" class="form-control" id="cuisineType" name="cuisineType" placeholder="Ej. Italiana">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="ingredients">Ingredientes</label>
-                    <input type="text" class="form-control" id="ingredients" name="ingredients" placeholder="Ej. Tomate, Lechuga">
+        <div class="tab-content mt-4">
+            <div class="tab-pane fade active show" id="menu-starters">
+                <div class="row gy-5" id="recipes-container">
+                    <!-- Recetas dinámicas se renderizan aquí -->
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="country">País de Origen</label>
-                    <input type="text" class="form-control" id="country" name="country" placeholder="Ej. México">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="difficulty">Dificultad</label>
-                    <select id="difficulty" name="difficulty" class="form-control">
-                        <option value="">Seleccione...</option>
-                        <option value="fácil">Fácil</option>
-                        <option value="medio">Medio</option>
-                        <option value="difícil">Difícil</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-4 align-self-end">
-                    <button type="submit" class="btn btn-primary btn-block">Buscar</button>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
 
-    <section id="menu" class="menu section">
-        <div class="container section-title" data-aos="fade-up">
-            <h2>Todas las Recetas</h2>
-            <p><span class="description-title">Deliciosas Recetas</span></p>
-        </div>
-
-        <div class="container">
-            <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
-                <div class="tab-pane fade active show" id="menu-starters">
-                    <div class="row gy-5">
-                        <!-- Bucle para las recetas -->
-                        <div th:each="recipe : ${recipes}" class="col-lg-4 menu-item">
-                            <a th:href="@{/recipe}" class="glightbox">
-                                <img th:src="${recipe.imageUrl}" class="menu-img img-fluid" alt="Receta">
-                            </a>
-                            <h4 th:text="${recipe.name}"></h4>
-                            <p class="ingredients" th:text="${recipe.ingredients}"></p>
-                            <p class="price" th:text="${recipe.cuisineType}"></p>
-                            <a th:href="@{/recipe}" class="btn btn-secondary mt-2">Ver Receta</a>
+    <!-- Modal para crear receta -->
+    <div class="modal fade" id="createRecipeModal" tabindex="-1" role="dialog" aria-labelledby="createRecipeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createRecipeModalLabel">Crear Receta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="createRecipeForm">
+                        <div class="form-group">
+                            <label for="recipeName">Nombre de la Receta</label>
+                            <input type="text" class="form-control" id="recipeName" required>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label for="cuisineType">Tipo de Cocina</label>
+                            <input type="text" class="form-control" id="cuisineType" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ingredients">Ingredientes</label>
+                            <textarea class="form-control" id="ingredients" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="country">País de Origen</label>
+                            <input type="text" class="form-control" id="country" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="difficulty">Dificultad</label>
+                            <select class="form-control" id="difficulty" required>
+                                <option value="">Seleccione...</option>
+                                <option value="Fácil">Fácil</option>
+                                <option value="Medio">Medio</option>
+                                <option value="Difícil">Difícil</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="imageUrl">URL de la Imagen</label>
+                            <input type="url" class="form-control" id="imageUrl" placeholder="https://example.com/image.jpg" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Receta</button>
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
     <script>
-        // Detecta el estado de autenticación
-        document.addEventListener('DOMContentLoaded', function() {
-            const authLink = document.getElementById('auth-link');
-            const token = localStorage.getItem('jwtToken');
+        document.addEventListener("DOMContentLoaded", () => {
+            const recipesContainer = document.getElementById("recipes-container");
+            const createRecipeForm = document.getElementById("createRecipeForm");
 
-            if (token) {
-                // Si el usuario está autenticado, muestra "Cerrar Sesión"
-                authLink.textContent = 'Cerrar Sesión';
-                authLink.href = '#';
-                authLink.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    localStorage.removeItem('jwtToken'); // Elimina el token
-                    window.location.href = '/login'; // Redirige a la página de inicio de sesión
-                });
-            } else {
-                // Si no está autenticado, muestra "Iniciar Sesión"
-                authLink.textContent = 'Iniciar Sesión';
-                authLink.href = '/login';
+            // Obtener recetas iniciales o del Local Storage
+            const initialRecipes = [
+                {
+                    name: "Ensalada César",
+                    cuisineType: "Americana",
+                    ingredients: "Lechuga, Pollo, Aderezo César",
+                    country: "Estados Unidos",
+                    difficulty: "Fácil",
+                    imageUrl: "https://via.placeholder.com/300",
+                },
+                {
+                    name: "Tacos al Pastor",
+                    cuisineType: "Mexicana",
+                    ingredients: "Carne de cerdo, Piña, Tortillas",
+                    country: "México",
+                    difficulty: "Fácil",
+                    imageUrl: "https://via.placeholder.com/300",
+                }
+            ];
+
+            if (!localStorage.getItem("recipes")) {
+                localStorage.setItem("recipes", JSON.stringify(initialRecipes));
             }
+
+            const loadRecipes = () => {
+                const recipes = JSON.parse(localStorage.getItem("recipes"));
+                recipesContainer.innerHTML = ""; // Limpiar contenedor
+                recipes.forEach((recipe, index) => {
+                    const recipeCard = `
+                        <div class="col-lg-4 menu-item">
+                            <img src="${recipe.imageUrl}" class="menu-img img-fluid" alt="${recipe.name}">
+                            <h4>${recipe.name}</h4>
+                            <p class="ingredients">${recipe.ingredients}</p>
+                            <p class="price">${recipe.cuisineType}</p>
+                            <a href="/recipes/${index + 1}" class="btn btn-secondary mt-2">Ver Receta</a>
+                        </div>
+                    `;
+                    recipesContainer.innerHTML += recipeCard;
+                });
+            };
+
+            // Manejar el envío del formulario
+            createRecipeForm.addEventListener("submit", (event) => {
+                event.preventDefault();
+
+                const newRecipe = {
+                    name: document.getElementById("recipeName").value.trim(),
+                    cuisineType: document.getElementById("cuisineType").value.trim(),
+                    ingredients: document.getElementById("ingredients").value.trim(),
+                    country: document.getElementById("country").value.trim(),
+                    difficulty: document.getElementById("difficulty").value,
+                    imageUrl: document.getElementById("imageUrl").value.trim(),
+                };
+
+                // Guardar receta en Local Storage
+                const recipes = JSON.parse(localStorage.getItem("recipes"));
+                recipes.push(newRecipe);
+                localStorage.setItem("recipes", JSON.stringify(recipes));
+
+                // Cerrar modal y recargar recetas
+                $("#createRecipeModal").modal("hide");
+                createRecipeForm.reset();
+                loadRecipes();
+            });
+
+            loadRecipes();
         });
     </script>
 
